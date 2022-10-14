@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "802502023578",
+    "project_id": "safelify",
+    "storage_bucket": "safelify.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802502023578:android:28821a680940f34a148223",
+        "android_client_info": {
+          "package_name": "com.safe_lify.org"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802502023578-btdei7tjtncfg39qdggdequp0s60m9ff.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrtUwD8LJB-FB5zRZCY-d_CiQTgneka3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802502023578-btdei7tjtncfg39qdggdequp0s60m9ff.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
