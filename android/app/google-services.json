@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:802502023578:android:28821a680940f34a148223",
+        "mobilesdk_app_id": "1:802502023578:android:55df5572e3778d6e148223",
         "android_client_info": {
-          "package_name": "com.safe_lify.org"
+          "package_name": "com.safelify.org"
         }
       },
       "oauth_client": [

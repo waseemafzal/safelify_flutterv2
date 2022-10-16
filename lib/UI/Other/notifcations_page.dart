@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:safe_lify/UI/Other/popUp.dart';
 import '../widgets/app_bar.dart';
 
 import '../../controllers/auth_controller.dart';
@@ -53,7 +54,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     _notificationsController.fechNotifications();
                   },
                   controller: _refreshController,
-                  child: ListView.builder(
+                  child: ListView.separated(
                       padding: EdgeInsets.all(kdPadding - 10),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
@@ -91,6 +92,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         }
 
                         return NotificationCard(report: _notificationsController.notifications[index]);
+                      },
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 5.h);
                       }),
                 );
         }),
@@ -123,12 +127,31 @@ class _NotificationCardState extends State<NotificationCard> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            Icon(Icons.notifications),
-            SizedBox(width: 10.w),
-            Text(widget.report.body),
-          ],
+        child: GestureDetector(
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return MightyPopupDialogue(content: [
+                    Padding(
+                      padding: EdgeInsets.all(kdPadding),
+                      child: Text(widget.report.body),
+                    )
+                  ]);
+                });
+          },
+          child: Row(
+            children: [
+              Icon(Icons.notifications),
+              SizedBox(width: 10.w),
+              Expanded(
+                  child: Text(
+                widget.report.body,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              )),
+            ],
+          ),
         ),
       ),
     );

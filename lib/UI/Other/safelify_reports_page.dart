@@ -240,11 +240,7 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
             FutureBuilder(
               future: renderThumbnail(widget.report),
               builder: (context, snapshot) {
-                if (snapshot.hasError)
-                  return Container(
-                    height: 130.h,
-                    width: 130.w,
-                  );
+                if (snapshot.hasError) return Container();
                 if (!snapshot.hasData) {
                   return Container(
                     height: 130.h,
