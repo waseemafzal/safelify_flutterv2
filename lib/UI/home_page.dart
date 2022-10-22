@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
                   iconPath: 'assets/icons/shield.png',
                   title: 'Report Tips',
                   onTap: () {
-                    _showRequestHelpDialogue(context: context, requestType: "Report");
+                    _appController.currentBottomNavIndex.value = 1;
                   },
                 ),
                 _buildHomePageItem(

@@ -73,7 +73,7 @@ class MightyDrawer extends StatelessWidget {
           SizedBox(height: 20.h),
           DrawerItem(
             image: 'assets/icons/legal.png',
-            title: "Legal Support",
+            title: "Legal Assistance",
             onTap: () => Get.to(
               () => AdminContactsPage(
                 contactType: 'legal',
@@ -83,7 +83,7 @@ class MightyDrawer extends StatelessWidget {
           SizedBox(height: 20.h),
           DrawerItem(
             image: 'assets/icons/medical_assistance.png',
-            title: "Medical Support",
+            title: "Medical Assistance",
             onTap: () => Get.to(
               () => AdminContactsPage(
                 contactType: 'medical',

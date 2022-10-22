@@ -36,7 +36,11 @@ class AuthController extends GetxController {
     });
   }
 
-  register({required String name, required String mobile, required String email, required String password}) async {
+  register(
+      {required String name,
+      required String mobile,
+      required String email,
+      required String password}) async {
     final fcmToken = await FirebaseMessaging.instance.getToken();
 
     try {
@@ -87,7 +91,8 @@ class AuthController extends GetxController {
 
       Position location = await _getGeoLocationPosition();
       final fcmToken = await FirebaseMessaging.instance.getToken();
-      if (_currentConnection == ConnectivityResult.none || _currentConnection == ConnectivityResult.bluetooth) {
+      if (_currentConnection == ConnectivityResult.none ||
+          _currentConnection == ConnectivityResult.bluetooth) {
         user.value = User.fromMap(await getAuthDataFromLocalStorage());
       } else {
         var response = await ApiHelper().postData('login', {
@@ -136,10 +141,13 @@ class AuthController extends GetxController {
 
   requestHelp({required String requestType, required String description}) async {
     try {
-      if (_currentConnection == ConnectivityResult.bluetooth || _currentConnection == ConnectivityResult.none) {
+      if (_currentConnection == ConnectivityResult.bluetooth ||
+          _currentConnection == ConnectivityResult.none) {
         final box = GetStorage();
         final Position position = await _getGeoLocationPosition();
-        final uri = Uri.parse('sms:${user.value!.sms_to}?body=I have an ${requestType} emergency. Please send help asap!. Location is ${position.latitude}, ${position.longitude}');
+        String divider = GetPlatform.isIOS ? '&' : '?';
+        final uri = Uri.parse(
+            'sms:${user.value!.sms_to}${divider}body=I have an ${requestType} emergency. Please send help asap!. Location is ${position.latitude}, ${position.longitude}');
 
         if (await canLaunchUrl(uri)) {
           launchUrl(uri);
@@ -166,7 +174,12 @@ class AuthController extends GetxController {
     }
   }
 
-  updateProfile({required String name, required String phone, required String address, XFile? image, required String password}) async {
+  updateProfile(
+      {required String name,
+      required String phone,
+      required String address,
+      XFile? image,
+      required String password}) async {
     try {
       isLoading(true);
       var uri = Uri.parse("${kcBaseAPIUrl}updateProfile");
@@ -175,7 +188,8 @@ class AuthController extends GetxController {
         var stream = new http.ByteStream(DelegatingStream.typed(image.openRead()));
         // get file length
         var length = await image.length();
-        var multipartFile = new http.MultipartFile('image', stream, length, filename: image.path);
+        var multipartFile =
+            new http.MultipartFile('image', stream, length, filename: image.path);
 
         request.files.add(multipartFile);
 
@@ -214,7 +228,8 @@ class AuthController extends GetxController {
   Future<Map<String, dynamic>> fetchProfile() async {
     try {
       isLoading(true);
-      Map<String, dynamic> response = await ApiHelper().postDataAuthenticated('profile', {});
+      Map<String, dynamic> response =
+          await ApiHelper().postDataAuthenticated('profile', {});
       return response;
     } catch (e) {
       printError(info: e.toString());
@@ -250,7 +265,8 @@ Future<Position> _getGeoLocationPosition() async {
 
   if (permission == LocationPermission.deniedForever) {
     // Permissions are denied forever, handle appropriately.
-    return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+    return Future.error(
+        'Location permissions are permanently denied, we cannot request permissions.');
   }
 
   // When we reach here, permissions are granted and we can

@@ -1,10 +1,5 @@
 import 'dart:io';
 
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:timeago/timeago.dart' as timeago;
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,16 +7,17 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
-import 'popUp.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+
 import '../../controllers/auth_controller.dart';
 import '../../controllers/comments_controller.dart';
 import '../../controllers/report_controller.dart';
 import '../../models/get_community_reports_model.dart';
 import '../../utils/global_helpers.dart';
-import 'package:video_player/video_player.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
-
 import '../styles/styles.dart';
+import 'popUp.dart';
 
 class SafeLifyReports extends StatefulWidget {
   const SafeLifyReports({Key? key}) : super(key: key);
@@ -55,7 +51,8 @@ class _SafeLifyReportsState extends State<SafeLifyReports> {
           elevation: 0,
           title: Text(
             "Safelify Reports",
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.sp, color: Colors.red),
+            style: TextStyle(
+                fontWeight: FontWeight.w500, fontSize: 18.sp, color: Colors.red),
           ),
         ),
         body: SingleChildScrollView(
@@ -63,7 +60,10 @@ class _SafeLifyReportsState extends State<SafeLifyReports> {
           child: Column(
             children: [
               Container(
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 6.0, offset: Offset(0.0, 0.40))]),
+                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                  BoxShadow(
+                      color: Colors.black54, blurRadius: 6.0, offset: Offset(0.0, 0.40))
+                ]),
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -79,7 +79,9 @@ class _SafeLifyReportsState extends State<SafeLifyReports> {
                                   child: Chip(
                                     padding: EdgeInsets.symmetric(horizontal: 30),
                                     label: Text(
-                                      selectedFilterCity.value.length > 0 ? selectedFilterCity.value : "Cities",
+                                      selectedFilterCity.value.length > 0
+                                          ? selectedFilterCity.value
+                                          : "Cities",
                                       style: TextStyle(fontSize: 14.sp),
                                     ),
                                   ),
@@ -113,14 +115,20 @@ class _SafeLifyReportsState extends State<SafeLifyReports> {
                                 return GestureDetector(
                                   onTap: () {
                                     isMyPostSelected.value = !isMyPostSelected.value;
-                                    _reportController.fetchCommunityReports(loadMine: isMyPostSelected.value);
+                                    _reportController.fetchCommunityReports(
+                                        loadMine: isMyPostSelected.value);
                                   },
                                   child: Chip(
-                                    backgroundColor: isMyPostSelected.value ? kcPrimaryGradient : null,
+                                    backgroundColor:
+                                        isMyPostSelected.value ? kcPrimaryGradient : null,
                                     padding: EdgeInsets.symmetric(horizontal: 30),
                                     label: Text(
                                       "My Posts",
-                                      style: TextStyle(fontSize: 14.sp, color: isMyPostSelected.value ? Colors.white : null),
+                                      style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: isMyPostSelected.value
+                                              ? Colors.white
+                                              : null),
                                     ),
                                   ),
                                 );
@@ -150,15 +158,20 @@ class _SafeLifyReportsState extends State<SafeLifyReports> {
                                 scrollDirection: Axis.vertical,
                                 itemCount: _reportController.communityReports.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  if (index == _reportController.communityReports.length) {
+                                  if (index ==
+                                      _reportController.communityReports.length) {
                                     return Column(
                                       children: [
-                                        CommunityPostCard(report: _reportController.communityReports[index]),
+                                        CommunityPostCard(
+                                            report: _reportController
+                                                .communityReports[index]),
                                         SizedBox(
                                           height: 10.h,
                                         ),
                                         Container(
-                                          decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(11)),
+                                          decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius: BorderRadius.circular(11)),
                                           height: 40,
                                           width: MediaQuery.of(context).size.width * 0.4,
                                           child: Row(
@@ -172,7 +185,8 @@ class _SafeLifyReportsState extends State<SafeLifyReports> {
                                               SizedBox(width: 5),
                                               Text(
                                                 "Add",
-                                                style: TextStyle(fontSize: 16, color: Colors.white),
+                                                style: TextStyle(
+                                                    fontSize: 16, color: Colors.white),
                                               )
                                             ],
                                           ),
@@ -181,7 +195,8 @@ class _SafeLifyReportsState extends State<SafeLifyReports> {
                                     );
                                   }
 
-                                  return CommunityPostCard(report: _reportController.communityReports[index]);
+                                  return CommunityPostCard(
+                                      report: _reportController.communityReports[index]);
                                 }),
                           );
                   })),
@@ -251,8 +266,12 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
 
                 return InkWell(
                   onTap: () async {
-                    VideoPlayerController videoPlayerController = VideoPlayerController.network(widget.report.file);
-                    FlickManager manager = FlickManager(videoPlayerController: videoPlayerController, autoInitialize: true, autoPlay: true);
+                    VideoPlayerController videoPlayerController =
+                        VideoPlayerController.network(widget.report.file);
+                    FlickManager manager = FlickManager(
+                        videoPlayerController: videoPlayerController,
+                        autoInitialize: true,
+                        autoPlay: true);
                     await showDialog(
                       context: context,
                       builder: (context) {
@@ -272,7 +291,7 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                     child: Stack(
                       children: [
                         Image.file(
-                          File(snapshot.data!),
+                          File(snapshot.data!.toString()),
                           fit: BoxFit.cover,
                           height: 150.h,
                           width: 150.w,
@@ -281,7 +300,8 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                           alignment: Alignment.center,
                           child: Container(
                             padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                            decoration: BoxDecoration(
+                                color: Colors.white, shape: BoxShape.circle),
                             child: Icon(Icons.play_arrow),
                           ),
                         )
@@ -305,14 +325,18 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                       Expanded(
                         child: Text(
                           "${widget.report.name}",
-                          style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black),
+                          style:
+                              TextStyle(fontWeight: FontWeight.w400, color: Colors.black),
                           maxLines: 1,
                         ),
                       ),
                       SizedBox(width: 5.w),
                       Text(
                         "${timeago.format(widget.report.createdOn!)}",
-                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 8.sp, color: Colors.black),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 8.sp,
+                            color: Colors.black),
                         maxLines: 1,
                       ),
                     ],
@@ -342,7 +366,8 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                     },
                     child: Text(
                       "${widget.report.title}",
-                      style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10, color: Colors.black),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400, fontSize: 10, color: Colors.black),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 3,
                     ),
@@ -362,13 +387,19 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                         ),
                         Text(
                           "${widget.report.commentCount ?? 0}",
-                          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.black),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: Colors.black),
                         ),
                         SizedBox(
                           width: 15.w,
                         ),
                         GestureDetector(
-                          onTap: () => FlutterShare.share(title: 'Community Post', text: """${widget.report.title}\n${widget.report.file}\n\n${_authController.user.value!.shareMessage}"""),
+                          onTap: () => FlutterShare.share(
+                              title: 'Community Post',
+                              text:
+                                  """${widget.report.title}\n${widget.report.file}\n\n${_authController.user.value!.shareMessage}"""),
                           child: Row(
                             children: [
                               Image.asset(
@@ -381,7 +412,10 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                               ),
                               Text(
                                 "Share",
-                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.black),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: Colors.black),
                               ),
                             ],
                           ),
@@ -402,7 +436,8 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                           PopupMenuItem(
                             enabled: !_reportController.isCorroborating.value,
                             onTap: () {
-                              _reportController.corroborate(id: widget.report.id!, status: "Flag");
+                              _reportController.corroborate(
+                                  id: widget.report.id!, status: "Flag");
                             },
                             child: Row(
                               children: [
@@ -415,7 +450,8 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                           PopupMenuItem(
                             enabled: !_reportController.isCorroborating.value,
                             onTap: () {
-                              _reportController.corroborate(id: widget.report.id!, status: "Corroborate");
+                              _reportController.corroborate(
+                                  id: widget.report.id!, status: "Corroborate");
                             },
                             child: Row(
                               children: [
@@ -445,15 +481,18 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
             return _commentsController.isLoading.value
                 ? getLoading()
                 : StatefulBuilder(builder: (context, setState) {
-                    final TextEditingController commentEditingController = TextEditingController();
+                    final TextEditingController commentEditingController =
+                        TextEditingController();
                     String? commentId;
 
                     return Dialog(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
                       child: Container(
                         height: 360.h,
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 12.0, right: 12.0, left: 12.0),
+                          padding:
+                              const EdgeInsets.only(top: 12.0, right: 12.0, left: 12.0),
                           child: Column(
                             children: [
                               Container(
@@ -469,46 +508,76 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                                           return _commentsController.isLoading == true
                                               ? getLoading()
                                               : Padding(
-                                                  padding: const EdgeInsets.only(bottom: 4.0),
+                                                  padding:
+                                                      const EdgeInsets.only(bottom: 4.0),
                                                   child: Container(
                                                     // width: 300.w,
-                                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: kcBackGroundGradient)),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(10),
+                                                        border: Border.all(
+                                                            color: kcBackGroundGradient)),
                                                     child: ListTile(
                                                       dense: true,
-                                                      trailing: _commentsController.comments[index].userId == _authController.user.value!.userId
-                                                          ? Container(
-                                                              height: 30,
-                                                              width: 50,
-                                                              child: Row(
-                                                                children: [
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      _commentsController.deleteComments(_commentsController.comments.removeAt(index).id);
-                                                                    },
-                                                                    child: Icon(Icons.delete_forever, size: 15.sp),
+                                                      trailing:
+                                                          _commentsController
+                                                                      .comments[index]
+                                                                      .userId ==
+                                                                  _authController
+                                                                      .user.value!.userId
+                                                              ? Container(
+                                                                  height: 30,
+                                                                  width: 50,
+                                                                  child: Row(
+                                                                    children: [
+                                                                      GestureDetector(
+                                                                        onTap: () {
+                                                                          _commentsController.deleteComments(
+                                                                              _commentsController
+                                                                                  .comments
+                                                                                  .removeAt(
+                                                                                      index)
+                                                                                  .id);
+                                                                        },
+                                                                        child: Icon(
+                                                                            Icons
+                                                                                .delete_forever,
+                                                                            size: 15.sp),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width: 10.w,
+                                                                      ),
+                                                                      GestureDetector(
+                                                                        onTap: () {
+                                                                          commentEditingController
+                                                                              .text = _commentsController
+                                                                                  .comments[
+                                                                                      index]
+                                                                                  .body ??
+                                                                              '';
+                                                                          commentId =
+                                                                              _commentsController
+                                                                                  .comments[
+                                                                                      index]
+                                                                                  .id;
+                                                                        },
+                                                                        child: Icon(
+                                                                          Icons.edit,
+                                                                          size: 15,
+                                                                        ),
+                                                                      ),
+                                                                    ],
                                                                   ),
-                                                                  SizedBox(
-                                                                    width: 10.w,
-                                                                  ),
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      commentEditingController.text = _commentsController.comments[index].body ?? '';
-                                                                      commentId = _commentsController.comments[index].id;
-                                                                    },
-                                                                    child: Icon(
-                                                                      Icons.edit,
-                                                                      size: 15,
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            )
-                                                          : null,
+                                                                )
+                                                              : null,
                                                       title: Text(
                                                         '${_commentsController.comments[index].name}',
-                                                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.w700),
                                                       ),
-                                                      subtitle: Text('${_commentsController.comments[index].body}'),
+                                                      subtitle: Text(
+                                                          '${_commentsController.comments[index].body}'),
                                                     ),
                                                   ),
                                                 );
@@ -524,18 +593,24 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                                     suffixIcon: IconButton(
                                       onPressed: () async {
                                         if (commentId == null) {
-                                          await _commentsController.addComments(commentEditingController.text, widget.report.id);
-                                          await _commentsController.getComments(widget.report.id);
+                                          await _commentsController.addComments(
+                                              commentEditingController.text,
+                                              widget.report.id);
+                                          await _commentsController
+                                              .getComments(widget.report.id);
                                           commentEditingController.clear();
                                         } else {
-                                          await _commentsController.updateComments(id: commentId!, body: commentEditingController.text);
+                                          await _commentsController.updateComments(
+                                              id: commentId!,
+                                              body: commentEditingController.text);
                                           commentEditingController.clear();
                                         }
                                       },
                                       icon: Icon(Icons.send),
                                     ),
                                     hintText: "Comment",
-                                    contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                                     border: OutlineInputBorder(
                                       borderSide: BorderSide(),
                                       borderRadius: BorderRadius.circular(kdBorderRadius),

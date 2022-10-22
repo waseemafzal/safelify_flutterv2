@@ -51,19 +51,27 @@ class LoginPage extends StatelessWidget {
             MightyTextField(
               placeHolder: "Email or Mobile Number",
               controller: _emailEditingController,
-              validator: (value) => GetUtils.isEmail(_emailEditingController.text) ? null : 'Invalid email address',
+              validator: (value) => GetUtils.isEmail(_emailEditingController.text)
+                  ? null
+                  : 'Invalid email address',
             ),
             Obx(() {
               return MightyTextField(
                   placeHolder: "Password",
                   controller: _passwordEditingController,
                   obscureText: shouldShowPassword.value,
-                  validator: (value) => _passwordEditingController.text.length < 4 ? "Password too short" : null,
+                  validator: (value) => _passwordEditingController.text.length < 4
+                      ? "Password too short"
+                      : null,
                   suffix: GestureDetector(
                     onTap: () => shouldShowPassword.value = !shouldShowPassword.value,
                     child: Container(
                       padding: const EdgeInsets.only(top: 5),
-                      child: Icon(!shouldShowPassword.value ? Icons.remove_red_eye : Icons.visibility_off_rounded, size: 15),
+                      child: Icon(
+                          !shouldShowPassword.value
+                              ? Icons.remove_red_eye
+                              : Icons.visibility_off_rounded,
+                          size: 15),
                     ),
                   ));
             }),

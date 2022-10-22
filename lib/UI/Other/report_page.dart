@@ -13,7 +13,7 @@ import '../styles/styles.dart';
 
 class ReportPage extends StatelessWidget {
   ReportPage({Key? key}) : super(key: key);
-  File? selectFile;
+  Rx<File?> selectFile = Rx(null);
 
   AuthController _authController = Get.find();
   ReportController _reportController = Get.find();
@@ -102,10 +102,11 @@ class ReportPage extends StatelessWidget {
                           : Row(
                               children: [
                                 GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
                                     if (_form.currentState!.validate()) {
-                                      _reportController.addReport(selectFile, _reportEditingController.text, _authController.user.value!.accessToken);
+                                      await _reportController.addReport(selectFile.value, _reportEditingController.text, _authController.user.value!.accessToken);
                                       _reportEditingController.clear();
+                                      selectFile.value = null;
                                     }
                                   },
                                   child: Container(
@@ -127,32 +128,26 @@ class ReportPage extends StatelessWidget {
                                   ),
                                 ),
                                 Spacer(),
-                                // SizedBox(
-                                //   width: 15.w,
-                                // ),
-                                // Image.asset(
-                                //   'assets/icons/video_icon.png',
-                                //   height: 19.h,
-                                //   width: 19.w,
-                                // ),
-                                SizedBox(
-                                  width: 15.w,
-                                ),
-                                // Image.asset(
-                                //   'assets/icons/location_icon.png',
-                                //   height: 19.h,
-                                //   width: 19.w,
-                                // ),
-                                // SizedBox(
-                                //   width: 15.w,
-                                // ),
+                                Obx(() {
+                                  return selectFile.value == null
+                                      ? SizedBox()
+                                      : Expanded(
+                                          child: Text(
+                                            "${selectFile.value!.path.split('/')[selectFile.value!.path.split('/').length - 1]}",
+                                            textAlign: TextAlign.right,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        );
+                                }),
+                                SizedBox(width: 5.w),
                                 GestureDetector(
                                   onTap: () async {
                                     XFile? result = await ImagePicker.platform.getVideo(source: ImageSource.camera);
 
                                     if (result != null) {
                                       File file = File(result.path);
-                                      selectFile = file;
+                                      selectFile.value = file;
                                     } else {}
                                   },
                                   child: Image.asset(
