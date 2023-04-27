@@ -5,21 +5,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:safe_lify/controllers/app_controller.dart';
+import '../../models/report_category.dart';
 import '../../controllers/auth_controller.dart';
 import '../../utils/global_helpers.dart';
 
 import '../../controllers/report_controller.dart';
 import '../styles/styles.dart';
 
-class ReportPage extends StatelessWidget {
+class ReportPage extends StatefulWidget {
   ReportPage({Key? key}) : super(key: key);
+
+  @override
+  State<ReportPage> createState() => _ReportPageState();
+}
+
+class _ReportPageState extends State<ReportPage> {
   Rx<File?> selectFile = Rx(null);
 
   AuthController _authController = Get.find();
-  ReportController _reportController = Get.find();
+
+  ReportController _reportController = Get.find()..fetchReportCategories();
+
   GlobalKey<FormState> _form = GlobalKey();
 
   TextEditingController _reportEditingController = TextEditingController();
+
+  final Rx<ReportCategory?> _selectedCategory = Rx(null);
+
+  @override
+  void initState() {
+    super.initState();
+    _reportController.fetchReportCategories();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +53,14 @@ class ReportPage extends StatelessWidget {
           elevation: 0,
           backgroundColor: Colors.grey.shade100,
           automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: kcPrimaryGradient),
+            onPressed: () {
+              AppController appController = Get.find();
+              appController.currentBottomNavIndex.value = 0;
+              // appController.currentBottomNavIndex.refresh();
+            },
+          ),
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 25.w),
@@ -43,7 +69,6 @@ class ReportPage extends StatelessWidget {
               height: 30.h,
             ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.32,
               width: double.infinity,
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(13), border: Border.all(color: Colors.grey), shape: BoxShape.rectangle),
               child: Padding(
@@ -65,9 +90,34 @@ class ReportPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 10,
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text("Category :"),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Obx(() {
+                            return DropdownButton<ReportCategory>(
+                              isExpanded: true,
+                              value: _selectedCategory.value,
+                              hint: Text("Select a category"),
+                              items: _reportController.categories
+                                  .map(
+                                    (element) => DropdownMenuItem<ReportCategory>(
+                                      value: element,
+                                      child: Text(element.category),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) {
+                                _selectedCategory.value = value;
+                              },
+                            );
+                          }),
+                        )
+                      ],
                     ),
+                    SizedBox(height: 20),
                     Container(
                         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
                         width: double.infinity,
@@ -104,7 +154,7 @@ class ReportPage extends StatelessWidget {
                                 GestureDetector(
                                   onTap: () async {
                                     if (_form.currentState!.validate()) {
-                                      await _reportController.addReport(selectFile.value, _reportEditingController.text, _authController.user.value!.accessToken);
+                                      await _reportController.addReport(selectFile.value, _reportEditingController.text, _authController.user.value!.accessToken, _selectedCategory.value!.id);
                                       _reportEditingController.clear();
                                       selectFile.value = null;
                                     }

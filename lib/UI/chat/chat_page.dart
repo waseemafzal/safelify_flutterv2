@@ -34,7 +34,8 @@ class _ChatPageState extends State<ChatPage> {
           centerTitle: true,
           title: Image.asset(
             'assets/logo/app_logo.png',
-            width: 80.w,
+            width: 30.w,
+            height: 30.w,
             color: kcPrimaryGradient,
           ),
           iconTheme: IconThemeData(color: kcPrimaryGradient),

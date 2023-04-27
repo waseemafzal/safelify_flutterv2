@@ -12,6 +12,7 @@ class ApiHelper {
   postData(String url, [Map<String, dynamic> data = const {}]) async {
     try {
       final String finalUrl = kcBaseAPIUrl + url;
+      printApiResponse("Api call --> ${finalUrl}");
 
       var res = await http.post(Uri.parse(finalUrl), body: data, headers: {'accept': 'application/json'});
       printApiResponse("API :: ${finalUrl} :: Data :: ${data} :: Response :: ${res.body}");

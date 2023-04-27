@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
-import 'auth_controller.dart';
-import '../models/plan.dart';
 
 import '../UI/packages/verify_payment_page.dart';
+import '../models/plan.dart';
 import '../utils/api_helper.dart';
 import '../utils/global_helpers.dart';
 

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import '../models/chat.dart';
 
+import '../models/chat.dart';
 import '../utils/api_helper.dart';
 import '../utils/global_helpers.dart';
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -6,7 +7,7 @@ import '../../controllers/auth_controller.dart';
 import '../../utils/global_helpers.dart';
 import '../styles/styles.dart';
 import '../widgets/mighty_button.dart';
-import '../widgets/nighty_text_field.dart';
+import '../widgets/mighty_text_field.dart';
 import 'forgot_password_page.dart';
 import 'register_page.dart';
 
@@ -24,6 +25,11 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      _emailEditingController.text = 'muzammil@gmail.com';
+      _passwordEditingController.text = '12345678';
+    }
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Form(
@@ -51,27 +57,19 @@ class LoginPage extends StatelessWidget {
             MightyTextField(
               placeHolder: "Email or Mobile Number",
               controller: _emailEditingController,
-              validator: (value) => GetUtils.isEmail(_emailEditingController.text)
-                  ? null
-                  : 'Invalid email address',
+              validator: (value) => GetUtils.isEmail(_emailEditingController.text) ? null : 'Invalid email address',
             ),
             Obx(() {
               return MightyTextField(
                   placeHolder: "Password",
                   controller: _passwordEditingController,
                   obscureText: shouldShowPassword.value,
-                  validator: (value) => _passwordEditingController.text.length < 4
-                      ? "Password too short"
-                      : null,
+                  validator: (value) => _passwordEditingController.text.length < 4 ? "Password too short" : null,
                   suffix: GestureDetector(
                     onTap: () => shouldShowPassword.value = !shouldShowPassword.value,
                     child: Container(
                       padding: const EdgeInsets.only(top: 5),
-                      child: Icon(
-                          !shouldShowPassword.value
-                              ? Icons.remove_red_eye
-                              : Icons.visibility_off_rounded,
-                          size: 15),
+                      child: Icon(!shouldShowPassword.value ? Icons.remove_red_eye : Icons.visibility_off_rounded, size: 15),
                     ),
                   ));
             }),

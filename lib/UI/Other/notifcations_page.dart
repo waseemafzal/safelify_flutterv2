@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
-import 'package:safe_lify/UI/Other/popUp.dart';
+import 'popUp.dart';
 import '../widgets/app_bar.dart';
 
 import '../../controllers/auth_controller.dart';

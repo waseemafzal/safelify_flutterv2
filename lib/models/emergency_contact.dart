@@ -6,6 +6,7 @@ class EmergencyContact {
     required this.address,
     required this.email,
     required this.type,
+    this.image,
   });
 
   String id;
@@ -14,6 +15,7 @@ class EmergencyContact {
   String email;
   String address;
   String type;
+  String? image;
 
   static List<EmergencyContact> listFromMap(List<dynamic> json) {
     return List<EmergencyContact>.from(
@@ -30,6 +32,7 @@ class EmergencyContact {
         address: json['address'] ?? 'Not Provided',
         email: json['email'] ?? 'Not Provided',
         type: json['type'],
+        image: json['image'],
       );
 
   Map<String, dynamic> toMap() => {

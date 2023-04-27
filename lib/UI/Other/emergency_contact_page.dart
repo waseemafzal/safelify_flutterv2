@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:safe_lify/controllers/permissions_controller.dart';
 import '../widgets/mighty_select_input.dart';
 import '../../controllers/auth_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,7 +12,7 @@ import '../../models/emergency_contact.dart';
 import '../../utils/global_helpers.dart';
 import '../styles/styles.dart';
 import '../widgets/mighty_button.dart';
-import '../widgets/nighty_text_field.dart';
+import '../widgets/mighty_text_field.dart';
 import 'popUp.dart';
 
 class EmergencyContactPage extends StatelessWidget {
@@ -104,6 +105,10 @@ class EmergencyContactPage extends StatelessWidget {
   _buildAddContactButton(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        if (!Get.find<PermissionsController>().canAddContact(_emergencyContactController.contacts)) {
+          showUpgradeAccountDialogue(context);
+          return;
+        }
         await showAddUpdateContactPopup(context: context);
       },
       child: Container(
@@ -275,7 +280,7 @@ class EmergencyContactCard extends StatelessWidget {
             CircleAvatar(
               radius: 25,
               backgroundImage: NetworkImage(
-                _authController.user.value!.profilePic,
+                contact.image ?? '',
               ),
             ),
             SizedBox(

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import '../../controllers/auth_controller.dart';
 import '../../utils/global_helpers.dart';
-import 'register_page.dart';
-import '../packages/choose_package_page.dart';
 import '../styles/styles.dart';
-
 import '../widgets/mighty_button.dart';
-import '../widgets/nighty_text_field.dart';
+import '../widgets/mighty_text_field.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   ForgotPasswordPage({super.key});

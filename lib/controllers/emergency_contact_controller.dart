@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:safe_lify/models/admin_contact.dart';
+import '../models/admin_contact.dart';
 import 'auth_controller.dart';
 import 'payment_controller.dart';
 import 'permissions_controller.dart';
@@ -19,7 +19,7 @@ class EmergencyContactController extends GetxController {
       isLoading(true);
       var response = await ApiHelper().postDataAuthenticated('getContacts', {});
 
-      contacts.value = EmergencyContact.listFromMap(response['data']);
+      contacts.value = EmergencyContact.listFromMap(response['data'] == null ? [] : response['data']);
     } catch (e) {
       printError(info: e.toString());
       showMightySnackBar(message: e.toString());
@@ -45,10 +45,6 @@ class EmergencyContactController extends GetxController {
   }
 
   addContact({required String name, required String number, required String address, required String email, required String type}) async {
-    PermissionsController permissionsController = Get.find();
-    if (!permissionsController.canAddContact(contacts)) {
-      return showMightySnackBar(message: 'Please upgrade your plan to perform this action.');
-    }
     try {
       isContactBeingAdded(true);
 

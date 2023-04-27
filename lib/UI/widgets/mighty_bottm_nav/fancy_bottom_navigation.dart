@@ -90,7 +90,7 @@ class MightyBottomNavigationState extends State<MightyBottomNavigation> with Tic
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _appController.currentBottomNavIndex.listen((value) {
-        setPage(value);
+        if (mounted) setPage(value);
       });
     });
   }

@@ -27,12 +27,14 @@ class MightyButton extends StatelessWidget {
           color: backgroundGradient,
           borderRadius: BorderRadius.circular(kdBorderRadius),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+        child: FittedBox(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

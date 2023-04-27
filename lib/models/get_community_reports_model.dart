@@ -14,7 +14,7 @@ class CommunityReport {
   String? id;
   String? title;
   String file;
-  DateTime? createdOn;
+  String? createdOn;
   String? userId;
   String? name;
   String? image;
@@ -33,7 +33,7 @@ class CommunityReport {
         id: json["id"],
         title: json["title"],
         file: json["file"] == null ? '' : json["file"],
-        createdOn: DateTime.parse(json["created_on"]),
+        createdOn: json["created_on"],
         userId: json["user_id"],
         name: json["name"],
         image: json["image"],
@@ -45,7 +45,7 @@ class CommunityReport {
         "id": id,
         "title": title,
         "file": file == null ? null : file,
-        "created_on": createdOn!.toIso8601String(),
+        "created_on": createdOn,
         "user_id": userId,
         "name": name,
         "image": image,

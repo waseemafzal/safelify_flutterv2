@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:safe_lify/UI/profile/edit_profile_page.dart';
+import 'package:line_icons/line_icon.dart';
+import 'package:line_icons/line_icons.dart';
+import 'become_reported_page.dart';
+import 'edit_profile_page.dart';
+import '../../config/config.dart';
+import '../../utils/global_helpers.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../Other/notifcations_page.dart';
 import '../packages/choose_package_page.dart';
 import '../../controllers/auth_controller.dart';
@@ -36,8 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: kcBackGroundGradient,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: (kdPadding - 8).w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: ListView(
           children: [
             SizedBox(height: 60.h),
             Container(
@@ -59,12 +64,15 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: 14,
             ),
-            Text(
-              "${_authController.user.value!.name}",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                "${_authController.user.value!.name}",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
             SizedBox(
@@ -91,13 +99,83 @@ class _ProfilePageState extends State<ProfilePage> {
               text: "Notifications",
               onTap: () => Get.to(() => NotificationsPage()),
             ),
-            SizedBox(
-              height: 20.h,
+            SizedBox(height: 20.h),
+            _buildProfileMenuOption(
+              icon: Icons.gavel_outlined,
+              text: "Terms & Conditions",
+              onTap: () {
+                launchUrl(Uri.parse(kTermAndConditionsURL), mode: LaunchMode.externalApplication);
+              },
             ),
+            SizedBox(height: 20.h),
+            _buildProfileMenuOption(
+              icon: Icons.shield_outlined,
+              text: "Privacy Policy",
+              onTap: () {
+                launchUrl(Uri.parse(kPrivacyPolicyURL), mode: LaunchMode.externalApplication);
+              },
+            ),
+            SizedBox(height: 20.h),
+            _buildProfileMenuOption(
+              icon: Icons.perm_contact_calendar_rounded,
+              text: "Become a Reporter",
+              onTap: () {
+                Get.to(() => BecomeReporterPage());
+                // launchUrl(Uri.parse(kPrivacyPolicyURL), mode: LaunchMode.externalApplication);
+              },
+            ),
+            SizedBox(height: 20.h),
             _buildProfileMenuOption(
               icon: Icons.power_settings_new_outlined,
               text: "Logout",
               onTap: () => _authController.logOut(),
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+            TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Obx(() {
+                      return _authController.isLoading.value
+                          ? getLoading()
+                          : AlertDialog(
+                              content: Text("Are you sure you want to delete you account?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Get.back(),
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.green),
+                                  ),
+                                  child: Text(
+                                    "No",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    _authController.deleteMyAccount();
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith((states) => kcPrimaryGradient),
+                                  ),
+                                  child: Text(
+                                    "Yes",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            );
+                    });
+                  },
+                );
+              },
+              child: Text(
+                "Delete My Account",
+                style: TextStyle(color: kcPrimaryGradient),
+              ),
             ),
           ],
         ),

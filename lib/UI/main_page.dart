@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'Other/report_page.dart';
+
+import '../controllers/app_controller.dart';
 import 'Other/emergency_contact_page.dart';
+import 'Other/report_page.dart';
 import 'Other/safelify_reports_page.dart';
 import 'home_page.dart';
-import '../controllers/app_controller.dart';
-
 import 'styles/styles.dart';
 import 'widgets/mighty_bottm_nav/fancy_bottom_navigation.dart';
 
 class MainPage extends StatelessWidget {
   final AppController _appController = Get.find();
 
+  final tabs = [HomePage(), ReportPage(), SafeLifyReports(), EmergencyContactPage()];
   @override
   Widget build(BuildContext context) {
-    final tabs = [HomePage(), ReportPage(), SafeLifyReports(), EmergencyContactPage()];
-
     return Obx(() {
       return Scaffold(
         body: tabs[_appController.currentBottomNavIndex.value],
@@ -63,6 +62,7 @@ class MainPage extends StatelessWidget {
             activeIconColor: Colors.white,
             onTabChangedListener: (position) {
               _appController.currentBottomNavIndex.value = position;
+              // _appController.currentBottomNavIndex.refresh();
             },
           );
         }),

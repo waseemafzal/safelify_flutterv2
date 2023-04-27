@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
-import 'package:safe_lify/models/admin_contact.dart';
+import '../../models/admin_contact.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../config/config.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/emergency_contact_controller.dart';
 import '../../models/emergency_contact.dart';
@@ -168,9 +169,7 @@ class EmergencyContactCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundImage: NetworkImage(
-                _authController.user.value!.profilePic,
-              ),
+              backgroundImage: NetworkImage('${contact.image}'),
             ),
             SizedBox(
               width: 10,

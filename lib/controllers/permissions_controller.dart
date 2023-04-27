@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import '../models/permision.dart';
 
@@ -27,13 +29,47 @@ class PermissionsController extends GetxController {
   bool canAddContact(List<EmergencyContact> contacts) {
     if (permissionManager.value == null) return false;
 
-    if (permissionManager.value!.planType == PlanType.Basic && contacts.length < 5) return true;
+    if (permissionManager.value!.planType == PlanType.Free) return false;
 
-    if (permissionManager.value!.planType == PlanType.Basic && contacts.length < 5) return true;
+    return true;
+  }
 
-    if (permissionManager.value!.planType == PlanType.Premium && contacts.length < 5) return true;
+  bool canAccessInternationalServices() {
+    if (permissionManager.value == null) return false;
 
-    if (permissionManager.value!.planType == PlanType.FamilyPlan && contacts.length < 5) return true;
+    if (permissionManager.value!.planType != PlanType.Diaspora) return false;
+
+    return true;
+  }
+
+  bool canNotifyContacts(String requestType) {
+    // Workplace emergency is only for business
+    print("Requesting canNotifyContacts for :: ${requestType}");
+    if (this._workPlaceEmergency(requestType) && permissionManager.value!.planType != PlanType.Business) return false;
+
+    if (permissionManager.value == null) return false;
+    if (permissionManager.value!.planType == PlanType.Free) return false;
+    if (permissionManager.value!.planType == PlanType.Basic) return false;
+
+    return true;
+  }
+
+  bool canRequestForImmediateHelp(String requestType) {
+    // Workplace emergency is only for business
+    print("Requesting canRequestForImmediateHelp for :: ${requestType}");
+    if (this._workPlaceEmergency(requestType) && permissionManager.value!.planType != PlanType.Business) return false;
+
+    if (permissionManager.value == null) return false;
+    if (permissionManager.value!.planType == PlanType.Free) return false;
+    if (permissionManager.value!.planType == PlanType.Basic) return false;
+
+    return true;
+  }
+
+  bool _workPlaceEmergency(String type) {
+    if (type == 'Workplace Accident' || type == 'Medical Emergencies' || type == 'Cyber Emergencies' || type == 'Physical Attack' || type == 'Legal Emergencies') {
+      return true;
+    }
 
     return false;
   }

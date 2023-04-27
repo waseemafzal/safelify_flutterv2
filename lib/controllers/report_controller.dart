@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:async/async.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import '../models/report_category.dart';
 
 import '../config/config.dart';
 import '../models/get_community_reports_model.dart';
@@ -17,7 +18,23 @@ class ReportController extends GetxController {
 
   RxList<CommunityReport> communityReports = RxList([]);
 
-  addReport(File? imageFile, String title, token) async {
+  RxList<ReportCategory> categories = RxList();
+
+  fetchReportCategories() async {
+    if (categories.length != 0) return;
+    isLoading(true);
+    try {
+      var response = await ApiHelper().getData('getReportCategoris');
+      categories.value = ReportCategory.listFromMap(response['data']);
+      categories.refresh();
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  addReport(File? imageFile, String title, token, String catId) async {
     // open a bytestream
     try {
       isLoading(true);
@@ -40,6 +57,7 @@ class ReportController extends GetxController {
 
       // add file to multipart
       request.fields['title'] = title;
+      request.fields['cat_id'] = catId;
       // request.
       // send
       var response = await request.send();
@@ -57,20 +75,28 @@ class ReportController extends GetxController {
 
   fetchCommunityReports({
     bool loadMine = false,
-    String city = '',
+    required String city,
+    required String catId,
   }) async {
     try {
       isLoading(true);
       communityReports.clear();
-      var resp = await ApiHelper().getData('getCommunityReports');
+      String url = 'getCommunityReports?';
+
+      if (city.length != 0) {
+        url += 'city=${city}&';
+      }
+      if (catId.length != 0) {
+        url += 'cat_id=${catId}&';
+      }
+
+      var resp = await ApiHelper().getData(url);
 
       communityReports.value = CommunityReport.listFromMap(resp['data']);
 
       if (loadMine) {
         AuthController authController = Get.find();
         communityReports.value = this.communityReports.where((element) => element.userId == authController.user.value!.userId).toList();
-      } else if (city.length > 0) {
-        communityReports.value = this.communityReports.where((element) => element.city == city || element.city.length == 0).toList();
       }
     } catch (e) {
     } finally {

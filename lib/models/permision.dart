@@ -1,4 +1,4 @@
-enum PlanType { Free, Basic, Premium, FamilyPlan }
+enum PlanType { Free, Basic, Premium, PremiumElite, Diaspora, Business }
 
 class Permissions {
   String currentPlan;
@@ -12,8 +12,10 @@ class Permissions {
       planType = PlanType.Basic;
     } else if (currentPlan == 'Premium') {
       planType = PlanType.Premium;
-    } else if (currentPlan == 'Family plan') {
-      planType = PlanType.FamilyPlan;
+    } else if (currentPlan == 'Diaspora Plan') {
+      planType = PlanType.Diaspora;
+    } else if (currentPlan == 'Business Plan') {
+      planType = PlanType.Business;
     }
   }
 }

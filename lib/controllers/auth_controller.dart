@@ -4,12 +4,16 @@ import 'package:async/async.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:safe_lify/UI/packages/choose_package_page.dart';
+import 'package:safe_lify/UI/styles/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../UI/Other/report_page.dart';
@@ -36,15 +40,26 @@ class AuthController extends GetxController {
     });
   }
 
-  register(
-      {required String name,
-      required String mobile,
-      required String email,
-      required String password}) async {
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-
+  register({
+    required String name,
+    required String email,
+    required String password,
+    required String mobile,
+    required String bloodGroup,
+    required String dob,
+    required String allergies,
+    required String gender,
+    required String healthConditions,
+    required String modelOfVehicle,
+    required String medications,
+    required String medicalInsurance,
+    required String vehicleInsurance,
+    required String nextOfKin,
+    required String country,
+  }) async {
     try {
       isLoading(true);
+      final fcmToken = await FirebaseMessaging.instance.getToken();
       var response = await ApiHelper().postData('signup', {
         'name': name,
         'email': email,
@@ -54,6 +69,17 @@ class AuthController extends GetxController {
         'devicetype': 'android',
         'device_id': fcmToken,
         'plan_id': '1',
+        'dob': dob,
+        'allergies': allergies,
+        'gender': gender,
+        'health_conditions': healthConditions,
+        'year': DateFormat('${DateFormat.YEAR}').format(DateTime.now()),
+        'model_of_vehicle': modelOfVehicle,
+        'medications': medications,
+        'medical_insurance': medicalInsurance,
+        'vehicle_insurance': vehicleInsurance,
+        'next_of_kin': nextOfKin,
+        'country': country,
       });
       Get.to(() => LoginPage());
       showMightySnackBar(message: response['message']);
@@ -91,8 +117,7 @@ class AuthController extends GetxController {
 
       Position location = await _getGeoLocationPosition();
       final fcmToken = await FirebaseMessaging.instance.getToken();
-      if (_currentConnection == ConnectivityResult.none ||
-          _currentConnection == ConnectivityResult.bluetooth) {
+      if (_currentConnection == ConnectivityResult.none || _currentConnection == ConnectivityResult.bluetooth) {
         user.value = User.fromMap(await getAuthDataFromLocalStorage());
       } else {
         var response = await ApiHelper().postData('login', {
@@ -113,7 +138,11 @@ class AuthController extends GetxController {
       await storeAuthData(user.value!.toMap());
 
       isLoading(false);
-      await Get.offAll(() => MainPage());
+
+      Get.offAll(() => MainPage());
+      if (await isFirstTimeLogin()) {
+        Get.to(() => ChoosePackagePage());
+      }
       // showMightySnackBar(message: response['message']);
     } on MightyException catch (e) {
       showMightySnackBar(message: e.toString());
@@ -135,19 +164,23 @@ class AuthController extends GetxController {
   logOut() async {
     var box = GetStorage();
     await box.erase();
-    Restart.restartApp();
-    // Get.offAll(() => LoginPage());
+    this.user.value = null;
+    // Future.delayed(Duration(seconds: 1));
+    // Restart.restartApp();
+    Get.offAll(() => LoginPage());
   }
 
-  requestHelp({required String requestType, required String description}) async {
+  requestHelp({
+    required String requestType,
+    required String description,
+    String? successMessage,
+  }) async {
     try {
-      if (_currentConnection == ConnectivityResult.bluetooth ||
-          _currentConnection == ConnectivityResult.none) {
+      if (_currentConnection == ConnectivityResult.bluetooth || _currentConnection == ConnectivityResult.none) {
         final box = GetStorage();
         final Position position = await _getGeoLocationPosition();
         String divider = GetPlatform.isIOS ? '&' : '?';
-        final uri = Uri.parse(
-            'sms:${user.value!.sms_to}${divider}body=I have an ${requestType} emergency. Please send help asap!. Location is ${position.latitude}, ${position.longitude}');
+        final uri = Uri.parse('sms:${user.value!.sms_to}${divider}body=I have an ${requestType} emergency. Please send help asap!. Location is ${position.latitude}, ${position.longitude}');
 
         if (await canLaunchUrl(uri)) {
           launchUrl(uri);
@@ -165,7 +198,7 @@ class AuthController extends GetxController {
         },
       );
       Get.back();
-      showMightySnackBar(message: response['message']);
+      showMightySnackBar(message: successMessage ?? response['message']);
     } catch (e) {
       printError(info: e.toString());
       showMightySnackBar(message: e.toString());
@@ -174,12 +207,7 @@ class AuthController extends GetxController {
     }
   }
 
-  updateProfile(
-      {required String name,
-      required String phone,
-      required String address,
-      XFile? image,
-      required String password}) async {
+  updateProfile({required String name, required String phone, required String address, XFile? image, required String password}) async {
     try {
       isLoading(true);
       var uri = Uri.parse("${kcBaseAPIUrl}updateProfile");
@@ -188,8 +216,7 @@ class AuthController extends GetxController {
         var stream = new http.ByteStream(DelegatingStream.typed(image.openRead()));
         // get file length
         var length = await image.length();
-        var multipartFile =
-            new http.MultipartFile('image', stream, length, filename: image.path);
+        var multipartFile = new http.MultipartFile('image', stream, length, filename: image.path);
 
         request.files.add(multipartFile);
 
@@ -228,13 +255,50 @@ class AuthController extends GetxController {
   Future<Map<String, dynamic>> fetchProfile() async {
     try {
       isLoading(true);
-      Map<String, dynamic> response =
-          await ApiHelper().postDataAuthenticated('profile', {});
+      Map<String, dynamic> response = await ApiHelper().postDataAuthenticated('profile', {});
       return response;
     } catch (e) {
       printError(info: e.toString());
       showMightySnackBar(message: e.toString());
       rethrow;
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  deleteMyAccount() async {
+    try {
+      isLoading(true);
+      Map<String, dynamic> response = await ApiHelper().postDataAuthenticated('deleteAccount', {});
+      showMightySnackBar(message: response['message']);
+      this.logOut();
+    } catch (e) {
+      printError(info: e.toString());
+      showMightySnackBar(message: e.toString());
+      rethrow;
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  becomeReporter({required String value}) async {
+    isLoading(true);
+    try {
+      var reponse = await ApiHelper().postDataAuthenticated('becomeGuestReporter', {
+        'guest_repoter': value.capitalize,
+      });
+      if (value.capitalize == 'Yes') {
+        showMightySnackBar(message: "Congratulations! you are now a reporter.", color: Colors.green);
+      } else {
+        showMightySnackBar(message: "You are no longer a reporter!");
+      }
+    } catch (e) {
+      printApiResponse(e.toString());
+      if (value.capitalize == 'Yes') {
+        showMightySnackBar(message: "You are already a reporter.");
+      } else {
+        showMightySnackBar(message: "You are no longer a reporter!");
+      }
     } finally {
       isLoading(false);
     }
@@ -265,8 +329,7 @@ Future<Position> _getGeoLocationPosition() async {
 
   if (permission == LocationPermission.deniedForever) {
     // Permissions are denied forever, handle appropriately.
-    return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
+    return Future.error('Location permissions are permanently denied, we cannot request permissions.');
   }
 
   // When we reach here, permissions are granted and we can

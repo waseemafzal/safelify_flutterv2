@@ -45,7 +45,7 @@ class _SplashPageState extends State<SplashPage> {
       body: Container(
         height: Get.height,
         width: Get.width,
-        decoration: BoxDecoration(gradient: kcVerticalGradient),
+        decoration: BoxDecoration(gradient: null),
         child: Center(
           child: Image.asset(
             'assets/logo/app_logo.png',

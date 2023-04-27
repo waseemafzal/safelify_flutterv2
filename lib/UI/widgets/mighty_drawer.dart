@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:safe_lify/UI/Other/international_services.dart';
+import 'package:safe_lify/UI/Other/popUp.dart';
+import 'package:safe_lify/UI/packages/choose_package_page.dart';
+import 'package:safe_lify/controllers/permissions_controller.dart';
+import 'package:safe_lify/models/permision.dart';
+import 'package:safe_lify/utils/global_helpers.dart';
 
 import '../Other/Sidebar.dart';
 import '../Other/admin_contacts_page.dart';
@@ -9,6 +15,7 @@ import '../../controllers/auth_controller.dart';
 
 import '../../controllers/app_controller.dart';
 import '../styles/styles.dart';
+import 'mighty_button.dart';
 
 class MightyDrawer extends StatelessWidget {
   MightyDrawer({
@@ -21,7 +28,7 @@ class MightyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: MediaQuery.of(context).size.width * 0.7,
+      width: MediaQuery.of(context).size.width * 0.8,
       elevation: 5,
       backgroundColor: Colors.white,
       child: ListView(
@@ -72,7 +79,7 @@ class MightyDrawer extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           DrawerItem(
-            image: 'assets/icons/legal.png',
+            image: 'assets/icons/balance.png',
             title: "Legal Assistance",
             onTap: () => Get.to(
               () => AdminContactsPage(
@@ -80,6 +87,13 @@ class MightyDrawer extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(height: 20.h),
+          DrawerItem(
+              image: 'assets/icons/plane.png',
+              title: "International Services",
+              onTap: () {
+                Get.to(() => InternationalServicesPage());
+              }),
           SizedBox(height: 20.h),
           DrawerItem(
             image: 'assets/icons/medical_assistance.png',
